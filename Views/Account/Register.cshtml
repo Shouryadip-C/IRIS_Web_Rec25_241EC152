@@ -1,0 +1,80 @@
+﻿@model RegisterViewModel
+
+<div class="vh-100 w-100 d-flex"
+     style="background: linear-gradient(135deg, #2c3e50, #3498db);">
+    <div class="container min-vh-100 d-flex align-items-center justify-content-center">
+        <div class="card shadow-lg col-12 col-md-8 col-lg-6">
+            <div class="card-body p-4">
+                <div class="text-center mb-4">
+                    <img src="~/images/logo.svg"
+                         alt="Sports Icon" 
+                         class="img-fluid mb-2"
+                         style="max-width: 80px;">
+                    <h2 class="card-title mb-2">Create Account</h2>
+                    <p class="text-muted">Join SportsHub to manage your bookings</p>
+                </div>
+
+                <form asp-action="Register" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                    <!-- Full Name -->
+                    <div class="form-floating mb-2">
+                        <input asp-for="FullName" class="form-control" placeholder="Full Name">
+                        <label asp-for="FullName">Full Name</label>
+                        <span asp-validation-for="FullName" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Branch Selection -->
+                    <div class="form-floating mb-2">
+                        <select asp-for="Branch" class="form-select" id="branch" required>
+                            <option value="">Select your branch</option>
+                            <option value="Artificial Intelligence">Artificial Intelligence</option>
+                            <option value="Chemical Engineering">Chemical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Computational and Data Science">Computational and Data Science</option>
+                            <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                            <option value="Electrical and Electronics Engineering">Electrical and Electronics Engineering</option>
+                            <option value="Electronics and Communication Engineering">Electronics and Communication Engineering</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Metallurgical and Materials Engineering">Metallurgical and Materials Engineering</option>
+                            <option value="Mining Engineering">Mining Engineering</option>
+                        </select>
+                        <label asp-for="Branch">Branch</label>
+                        <span asp-validation-for="Branch" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-floating mb-2">
+                        <input asp-for="Email" class="form-control" placeholder="Email">
+                        <label asp-for="Email">Email address</label>
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-floating mb-2">
+                        <input asp-for="Password" class="form-control" placeholder="Password">
+                        <label asp-for="Password">Password</label>
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="form-floating mb-4">
+                        <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password">
+                        <label asp-for="ConfirmPassword">Confirm Password</label>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-2 mb-2">
+                        <i class="fas fa-user-plus me-2"></i>Create Account
+                    </button>
+
+                    <div class="text-center mt-2">
+                        <span class="text-muted">Already have an account? </span>
+                        <a asp-action="Login" class="text-decoration-none">Sign In</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
