@@ -6,12 +6,24 @@ A full-stack MVC web application built with ASP.NET Core that allows students to
 
 ## Demo Video
 
-[**Watch the Demo Video**](#)  
+[**Watch the Demo Video**](https://drive.google.com/file/d/16ACCmb-vVvkIj1BmMrBMNocFe550L-gq/view?usp=sharing)
 
 ---
 
 ## Screenshots
 
+![Login](Demo/login.png)  
+![Register](Demo/register_user.png)  
+![Admin Dashboard](Demo/admin_dashboard.png)  
+![Manage Requests](Demo/admin_manage_request.png)  
+![Manage Equipment](Demo/admin_manage_equipment.png)  
+![Add Equipment](Demo/admin_add_equipment.png)  
+![Manage Court](Demo/admin_manage_court.png)  
+![Add Court](Demo/admin_add_court.png)
+![Student Dashboard](Demo/booking_status_and_rejection_reason.png)  
+![New Equipment Booking](Demo/new_equipment_booking.png)  
+![New Court Booking](Demo/new_court_booking.png)  
+![Notifications](Demo/booking_notificataions.png)  
 
 ---
 
@@ -38,7 +50,7 @@ Follow these steps to set up the project from scratch:
 
 2. **Prerequisites:**
 
-   - [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) or later
+   - Download [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0) (8.0.14 used in this project) or later.
 
 3. **Restore Dependencies:**
 
