@@ -1,3 +1,210 @@
 ﻿@{
     Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    ViewData["Title"] = "Student Dashboard";
+}
+@model StudentDashboardViewModel
+
+<div class="container mt-2">
+    <h2 class="mb-4">My Bookings</h2>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Delete <span id="bookingName"></span>?</p>
+                    <input type="hidden" id="deleteBookingId">
+                    <input type="hidden" id="bookingType">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" id="confirmDelete" class="btn btn-danger">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Court Bookings Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Court Bookings</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.CourtBookings != null && Model.CourtBookings.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Court Name</th>
+                                <th>Location</th>
+                                <th>Booking Date</th>
+                                <th>Time Slot</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var booking in Model.CourtBookings)
+                            {
+                                <tr>
+                                    <td>@booking.Court?.Name</td>
+                                    <td>@booking.Court?.Location</td>
+                                    <td>@booking.BookingDate.ToString("d")</td>
+                                    <td>@booking.SlotStart.ToString("hh\\:mm") - @booking.SlotEnd.ToString("hh\\:mm")</td>
+                                    <td>
+                                        @switch (booking.Status)
+                                        {
+                                            case BookingStatus.Pending:
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                                ;
+                                                break;
+                                            case BookingStatus.Approved:
+                                                <span class="badge bg-success">Approved</span>
+                                                ;
+                                                break;
+                                            case BookingStatus.Rejected:
+                                                <span class="badge bg-danger">Rejected</span>;
+                                                <i class="fa-solid fa-circle-exclamation rejectreason" data-bs-toggle="tooltip" title=@booking.RejectionReason></i>
+                                                break;
+                                            case BookingStatus.CancellationRequested:
+                                                <span class="badge bg-warning">Requested Canellation</span>
+                                                ;
+                                                break;
+                                            case BookingStatus.Cancelled:
+                                                <span class="badge bg-secondary">Cancelled</span>
+                                                ;
+                                                break;
+                                            default:
+                                                <span class="badge bg-info">Unknown</span>
+                                                ;
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @switch (booking.Status)
+                                        {
+                                            case BookingStatus.CancellationRequested:
+                                                <button class="btn btn-sm btn-outline-danger delete-court-btn disabled"
+                                                        data-id="@booking.Id">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                ;
+                                                break;
+                                            default:
+                                                <button class="btn btn-sm btn-outline-danger delete-court-btn"
+                                                        data-id="@booking.Id">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>;
+                                                break;
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No court bookings found.</p>
+            }
+        </div>
+    </div>
+
+    <!-- Equipment Bookings Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Equipment Bookings</h5>
+        </div>
+        <div class="card-body">
+            @if (Model.EquipmentBookings != null && Model.EquipmentBookings.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Equipment Name</th>
+                                <th>Booking Date</th>
+                                <th>Quantity</th>
+                                <th>Time Slot</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var booking in Model.EquipmentBookings)
+                            {
+                                <tr>
+                                    <td>@booking.Equipment?.Name</td>
+                                    <td>@booking.BookingDate.ToString("d")</td>
+                                    <td>@booking.Quantity</td>
+                                    <td>@booking.SlotStart.ToString("hh\\:mm") - @booking.SlotEnd.ToString("hh\\:mm")</td>
+                                    <td>
+                                        @switch (booking.Status)
+                                        {
+                                            case BookingStatus.Pending:
+                                                <span class="badge bg-warning text-dark">Pending</span>;
+                                                break;
+                                            case BookingStatus.Approved:
+                                                <span class="badge bg-success">Approved</span>;
+                                                break;
+                                            case BookingStatus.Rejected:
+                                                <span class="badge bg-danger">Rejected</span>;
+                                                @* <i class="fa-solid fa-circle-exclamation" data-bs-toggle="tooltip" title=@booking.RejectionReason></i> *@
+                                                break;
+                                            case BookingStatus.CancellationRequested:
+                                                <span class="badge bg-warning">Requested Canellation</span>
+                                                ;
+                                                break;
+                                            case BookingStatus.Cancelled:
+                                                <span class="badge bg-secondary">Cancelled</span>
+                                                ;
+                                                break;
+                                            default:
+                                                <span class="badge bg-info">Unknown</span>
+                                                ;
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @switch (booking.Status)
+                                        {
+                                            case BookingStatus.CancellationRequested:
+                                                <button class="btn btn-sm btn-outline-danger delete-equipment-btn disabled"
+                                                        data-id="@booking.Id">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                ;
+                                                break;
+                                            default:
+                                                <button class="btn btn-sm btn-outline-danger delete-equipment-btn"
+                                                        data-id="@booking.Id">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                                ;
+                                                break;
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <p class="text-muted">No equipment bookings found.</p>
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/js/dashboard.js" asp-append-version="true"></script>
 }

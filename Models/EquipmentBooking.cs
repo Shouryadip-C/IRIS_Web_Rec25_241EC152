@@ -14,15 +14,30 @@ namespace IRIS_Web_Rec25_241EC152.Models
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
 
-        [Range(1, 5)]
+        [Range(1, 2)]
         public int Quantity { get; set; }
 
         public DateTime BookingDate { get; set; }
 
-        [Range(1, 4)]
-        public int DurationHours { get; set; } // Max 4 hours
+        [Range(6, 21)]
+        public int HourSlot { get; set; }
 
-        public string Status { get; set; } = "Pending"; // Approved/Rejected/Cancelled
+        public BookingStatus Status { get; set; } = BookingStatus.Pending;
+
+        public string? RejectionReason { get; set; } = null;
+        public bool ReminderSent { get; set; }
+
+        // Computed properties
+        public DateTime SlotStart => BookingDate.AddHours(HourSlot);
+        public DateTime SlotEnd => SlotStart.AddHours(1);
     }
 
+    public enum BookingStatus
+    {
+        Pending,
+        Approved,
+        Rejected,
+        CancellationRequested,
+        Cancelled
+    }
 }

@@ -1,3 +1,180 @@
 ﻿@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
+
+@model AnalyticsViewModel
+
+<div class="container-fluid">
+    <h2>Analytics Dashboard</h2>
+
+    <!-- Most Booked Section -->
+    <div class="row mb-4">
+        <!-- Equipment -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Most Booked Equipment</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Equipment</th>
+                                <th>Bookings</th>
+                                <th>Total Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.MostBookedEquipment)
+                            {
+                                <tr>
+                                    <td>@item.EquipmentName</td>
+                                    <td>@item.TotalBookings</td>
+                                    <td>@item.TotalHoursBooked</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courts -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Most Booked Courts</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Court</th>
+                                <th>Bookings</th>
+                                <th>Total Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.MostBookedCourts)
+                            {
+                                <tr>
+                                    <td>@item.CourtName</td>
+                                    <td>@item.TotalBookings</td>
+                                    <td>@item.TotalHoursBooked</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Peak Hours -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Equipment Peak Hours</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="equipmentPeakChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Court Peak Hours</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="courtPeakChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Usage Trends -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Combined Usage Trends</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="trendsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Equipment Peak Hours
+        new Chart(document.getElementById('equipmentPeakChart'), {
+            type: 'bar',
+            data: {
+                labels: @Json.Serialize(Model.EquipmentPeakHours.Select(x => x.Hour + ":00")),
+                datasets: [{
+                    label: 'Booking Count',
+                    data: @Json.Serialize(Model.EquipmentPeakHours.Select(x => x.BookingCount)),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total Hours',
+                    data: @Json.Serialize(Model.EquipmentPeakHours.Select(x => x.TotalHours)),
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // Court Peak Hours
+        new Chart(document.getElementById('courtPeakChart'), {
+            type: 'bar',
+            data: {
+                labels: @Json.Serialize(Model.CourtPeakHours.Select(x => x.Hour + ":00")),
+                datasets: [{
+                    label: 'Bookings',
+                    data: @Json.Serialize(Model.CourtPeakHours.Select(x => x.BookingCount)),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgb(75, 192, 192)',
+                    borderWidth: 1
+                }]
+            }
+        });
+
+        // Trends Chart
+        new Chart(document.getElementById('trendsChart'), {
+            type: 'line',
+            data: {
+                labels: @Json.Serialize(Model.DailyTrends.Keys),
+                datasets: [
+                    {
+                        label: 'Daily Trends',
+                        data: @Json.Serialize(Model.DailyTrends.Values),
+                        borderColor: 'rgb(255, 99, 132)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Weekly Trends',
+                        data: @Json.Serialize(Model.WeeklyTrends.Values),
+                        borderColor: 'rgb(54, 162, 235)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Monthly Trends',
+                        data: @Json.Serialize(Model.MonthlyTrends.Values),
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }
+                ]
+            }
+        });
+    </script>
+}

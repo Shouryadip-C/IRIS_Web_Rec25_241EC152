@@ -1,25 +1,53 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IRIS_Web_Rec25_241EC152.Models
 {
     public class Equipment
     {
+        public Equipment()
+        {
+            Condition = "New";
+            Status = Status.Available;
+        }
+        
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(100)]
+        [Required(ErrorMessage = "Equipment name is required")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "Name must be 3-100 characters")]
+        [Display(Name = "Equipment Name")]
         public string Name { get; set; }
 
-        [Range(1, 100)]
-        public int TotalQuantity { get; set; }
+        [Required(ErrorMessage = "Quantity is required")]
+        [Range(1, 100, ErrorMessage = "Quantity must be between 1-100")]
+        [Display(Name = "Quantity")]
+        public int Quantity { get; set; }
 
-        public int AvailableQuantity { get; set; }
-
-        public string Category { get; set; } // Football, Basketball, Fitness, Tennis, Table-Tennis, Volleyball, Cricket
-
-        public string Condition { get; set; } // Good, New, Used, etc.
+        [Required(ErrorMessage = "Please select a sport type")]
+        [Display(Name = "Sport Type")]
+        public string Type { get; set; } // Football, Basketball, Fitness, Tennis, Table-Tennis, Volleyball, Cricket
 
         [Required]
-        public string Status { get; set; } // Available, Not Available, Under Maintenance
+        public Status Status { get; set; } // Available, Reserved, Under Maintenance
+
+        [Required(ErrorMessage = "Condition is required")]
+        [Display(Name = "Condition")]
+        public string Condition { get; set; }
+
+        // Static list of allowed conditions
+        public static readonly List<string> Conditions =
+        [
+            "New",
+            "Used - Good",
+            "Used - Fair",
+            "Damaged"
+        ];
+    }
+
+    public enum Status
+    {
+        Available=1,
+        UnderMaintenance=2,
+        Reserved=3        
     }
 }

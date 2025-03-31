@@ -1,0 +1,80 @@
+﻿@model List<Notification>
+
+@{
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    ViewData["Title"] = "Notifications";
+}
+
+<div class="container mt-2">
+    <h2 class="mb-4">Notifications</h2>
+
+    @if (!Model.Any())
+    {
+        <p>No notifications found.</p>
+    }
+    else
+    {
+        <table class="table table-bordered table-striped">
+            <thead class="table-light">
+                <tr>
+                    <th>Message</th>
+                    <th>Created</th>
+                    <th>Read</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var notification in Model)
+                {
+                    <tr>
+                        <td>@notification.Message</td>
+                        <td>@notification.CreatedAt.ToLocalTime().ToString("g")</td>
+                        <td>
+                            @if (notification.IsRead)
+                            {
+                                <span class="badge bg-success">Read</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Unread</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!notification.IsRead)
+                            {
+                                <button class="btn btn-sm btn-primary mark-read-btn"
+                                        data-id="@notification.Id">
+                                    Mark as Read
+                                </button>
+                            }
+                            else
+                            {
+                                <span class="text-muted">N/A</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $(".mark-read-btn").click(function () {
+                var notificationId = $(this).data("id");
+                $.ajax({
+                    url: '@Url.Action("MarkNotificationAsRead", "Student")',
+                    type: 'POST',
+                    data: { id: notificationId },
+                    success: function (response) {
+                        if (response.success) {
+                            location.reload(); // Simple reload to update the table
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

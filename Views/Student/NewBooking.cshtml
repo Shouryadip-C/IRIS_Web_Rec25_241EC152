@@ -1,0 +1,182 @@
+﻿@{
+    Layout = "~/Views/Shared/_StudentLayout.cshtml";
+    ViewData["Title"] = "New Booking";
+}
+
+@model NewBookingViewModel
+
+<div class="container mt-2">
+    <h2>New Booking</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <!-- 1) Filter Form -->
+    <form method="get" asp-action="NewBooking" class="row g-3 mt-2 mb-4">
+        <div class="col-md-3">
+            <label asp-for="BookingType" class="form-label">Booking Type</label>
+            <select id="bookingType" asp-for="BookingType" class="form-select">
+                <option value="">-- Select --</option>
+                <option value="Court" selected="@(Model.BookingType == "Court" ? "selected" : null)">Court</option>
+                <option value="Equipment" selected="@(Model.BookingType == "Equipment" ? "selected" : null)">Equipment</option>
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="SportType" class="form-label">Sport Type</label>
+            <select id="sportType" asp-for="SportType" class="form-select">
+                <option value="">-- Select Sport --</option>
+                @if (Model.SportTypes != null)
+                {
+                    foreach (var st in Model.SportTypes)
+                    {
+                        <option value="@st" selected="@(Model.SportType == st ? "selected" : null)">@st</option>
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label asp-for="SelectedDate" class="form-label">Date</label>
+            <input id="datePicker" asp-for="SelectedDate" class="form-control date" />
+        </div>
+
+        <div class="col-md-3 d-flex align-items-end">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
+
+    <!-- 2) Display Available Courts/Equipment as Cards -->
+    @if (Model.BookingType == "Court" && Model.AvailableCourts != null && Model.AvailableCourts.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var court in Model.AvailableCourts)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@court.Name</h5>
+                            <p class="card-text">
+                                <strong>Location:</strong> @court.Location <br />
+                                <strong>Capacity:</strong> @court.Capacity <br />
+                                <strong>Open:</strong> @court.OpeningTime.ToString("hh\\:mm") - @court.ClosingTime.ToString("hh\\:mm")
+                            </p>
+                            <!-- Radio button with data attributes -->
+                            <div class="form-check">
+                                <input class="form-check-input court-radio" type="radio" 
+                                       name="SelectedCourtId" 
+                                       value="@court.Id" 
+                                       data-opening-hour="@court.OpeningTime.Hours" 
+                                       data-closing-hour="@court.ClosingTime.Hours" 
+                                       id="court_@court.Id" />
+                                <label class="form-check-label" for="court_@court.Id">
+                                    Select this court
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Time slot selection (hidden by default) -->
+        <div class="mt-4 p-3 border" id="CourtSlotContainer" style="max-width:300px; display:none;">
+            <label class="form-label" for="SelectedTimeSlot">Select Time Slot</label>
+            <select name="SelectedTimeSlot" id="SelectedTimeSlot" class="form-select">
+                <option value="">-- Select Slot --</option>
+            </select>
+        </div>
+    }
+    else if (Model.BookingType == "Equipment" && Model.AvailableEquipment != null && Model.AvailableEquipment.Any())
+    {
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var eq in Model.AvailableEquipment)
+            {
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">@eq.Name</h5>
+                            <p class="card-text">
+                                <strong>Total Quantity:</strong> @eq.Quantity <br />
+                                <strong>Condition:</strong> @eq.Condition
+                            </p>
+                            <!-- Radio button to select equipment -->
+                            <div class="form-check">
+                                <input class="form-check-input equipment-radio" type="radio"
+                                       name="SelectedEquipmentId"
+                                       value="@eq.Id"
+                                       id="eq_@eq.Id" />
+                                <label class="form-check-label" for="eq_@eq.Id">
+                                    Select this equipment
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Equipment Booking Time and Duration Selection -->
+        <div class="mt-4 p-3 border" style="max-width: 400px;">
+            <div class="mb-3">
+                <label for="SelectedTimeSlot" class="form-label">Select Booking Time</label>
+                <select id="SelectedTimeSlot" name="HourSlot" class="form-select">
+                    <option value="">-- Select Time Slot --</option>
+                    @for (int hour = 6; hour <= 21; hour++)
+                    {
+                        <option value="@hour">@hour:00 - @(hour + 1):00</option>
+                    }
+                </select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="SelectedQuantity" class="form-label">Quantity</label>
+                <input asp-for="SelectedQuantity" id="SelectedQuantity" class="form-control" type="number" min="1" />                
+                <small id="equipmentQuantityHelp" class="form-text text-muted">
+                    Available: <span id="equipmentAvailableLabel">N/A</span>
+                </small>
+                <br/>
+                <span role="alert" id="showError" style="color:red"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        if (!string.IsNullOrEmpty(Model.BookingType) && !string.IsNullOrEmpty(Model.SportType))
+        {
+            <p class="text-muted">No items found for your selection.</p>
+        }
+        else
+        {
+            <p class="text-muted">Please select Booking Type, Sport Type, and Date, then click Search.</p>
+        }
+    }
+
+    <!-- 3) Confirm Booking Form -->
+    @if ((Model.AvailableCourts != null && Model.AvailableCourts.Any()) ||
+         (Model.AvailableEquipment != null && Model.AvailableEquipment.Any()))
+    {
+        <form method="post" id="bookingConfirm" asp-action="NewBooking" class="mt-4" onsubmit="return validate()">
+            @Html.AntiForgeryToken()
+            <!-- Preserve the search filter values -->
+            <input type="hidden" name="BookingType" value="@Model.BookingType" />
+            <input type="hidden" name="SportType" value="@Model.SportType" />
+            <input type="hidden" name="SelectedDate" value="@Model.SelectedDate.ToString("yyyy-MM-dd")" />
+            <input type="hidden" name="Selected" value="" />
+
+            <!-- Hidden fields for the final selections -->
+            <input type="hidden" name="SelectedTimeSlot" id="HiddenSelectedTimeSlot" value="@Model.SelectedTimeSlot" />
+            <input type="hidden" asp-for="SelectedQuantity" id="HiddenSelectedQuantity" />
+            <input type="hidden" asp-for="SelectedCourtId" id="HiddenSelectedCourtId" />
+            <input type="hidden" asp-for="SelectedEquipmentId" id="HiddenSelectedEquipmentId" />
+
+            <button id="btnSubmit" type="submit" class="btn btn-success">Confirm Booking</button>
+        </form>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/new_booking.js" asp-append-version="true"></script>
+}

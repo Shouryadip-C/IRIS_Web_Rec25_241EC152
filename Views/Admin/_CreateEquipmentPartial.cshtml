@@ -1,0 +1,65 @@
+﻿@{
+    Layout = null;
+}
+@model Equipment
+
+<form  id="createForm" action="CreateEquipment", method="post">
+    <div class="modal-body">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="form-floating py-2">
+            <input asp-for="Name" class="form-control" placeholder=" " />
+            <label asp-for="Name" class="form-label">
+                Equipment Name
+            </label>
+            <span asp-validation-for="Name" class="text-danger small"></span> 
+        </div>
+
+        <div class="form-floating py-2">
+            <select asp-for="Type" class="form-select">
+                <option value="">Select Sport Type</option>
+                <option value="Badminton">Badminton</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Cricket">Cricket</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Football">Football</option>
+                <option value="Table Tennis">Table Tennis</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Volleyball">Volleyball</option>
+            </select>
+            <label asp-for="Type" class="form-label">
+                Sport Type
+            </label>
+            <span asp-validation-for="Type" class="text-danger small"></span>
+        </div>
+
+        <div class="form-floating py-2">
+            <select asp-for="Condition"
+                    asp-items="Equipment.Conditions.Select(c => new SelectListItem(c, c))"
+                    class="form-select form-select">
+            </select>
+            <label asp-for="Condition" class="form-label">
+                Condition
+            </label>
+            <span asp-validation-for="Condition" class="text-danger fs-6 small"></span>
+        </div>
+
+        <div class="form-floating py-2">
+            <input asp-for="Quantity" class="form-control"
+                    placeholder=" " min="1" max="100" />
+            <label asp-for="Quantity" class="form-label">
+                Total Quantity
+            </label>
+            <span asp-validation-for="Quantity" class="text-danger small"></span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="bi bi-x-lg me-2"></i>Cancel
+        </button>
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save me-2"></i>Create Equipment
+        </button>
+    </div>
+</form>

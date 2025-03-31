@@ -1,0 +1,76 @@
+﻿@{
+    Layout = null;
+}
+@model Court
+
+<div class="modal-body py-0">
+    <form id="createForm" asp-action="CreateCourt" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Name" class="form-control" placeholder=" " />
+            <label asp-for="Name" class="form-label"></label>
+            <span asp-validation-for="Name" class="text-danger small"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Location" class="form-control" placeholder=" " />
+            <label asp-for="Location" class="form-label"></label>
+            <span asp-validation-for="Location" class="text-danger small"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <select asp-for="Availability" class="form-select"
+                    asp-items="Html.GetEnumSelectList<CourtAvailability>()">
+            </select>
+            <label asp-for="Availability" class="form-label"></label>
+            <span asp-validation-for="Availability" class="text-danger small"></span>
+        </div>
+
+        <div class="form-floating mb-2">
+            <input asp-for="Capacity" class="form-control" placeholder=" " min="1" max="20" />
+            <label asp-for="Capacity" class="form-label"></label>
+            <span asp-validation-for="Capacity" class="text-danger small"></span>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input asp-for="OpeningTime" class="form-control" type="time" />
+                    <label asp-for="OpeningTime" class="form-label"></label>
+                    <span asp-validation-for="OpeningTime" class="text-danger small"></span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-floating">
+                    <input asp-for="ClosingTime" class="form-control" type="time" />
+                    <label asp-for="ClosingTime" class="form-label"></label>
+                    <span asp-validation-for="ClosingTime" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-floating mb-2">
+            <select asp-for="Type" class="form-select">
+                <option value="">Select Sport Type</option>
+                <option value="Badminton">Badminton</option>
+                <option value="Basketball">Basketball</option>
+                <option value="Cricket">Cricket</option>
+                <option value="Fitness">Fitness</option>
+                <option value="Football">Football</option>
+                <option value="Table Tennis">Table Tennis</option>
+                <option value="Tennis">Tennis</option>
+                <option value="Volleyball">Volleyball</option>
+            </select>
+            <label asp-for="Type" class="form-label"></label>
+            <span asp-validation-for="Type" class="text-danger small"></span>
+        </div>
+
+        <div class="modal-footer border-top-0 px-0">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Court</button>
+        </div>
+    </form>
+</div>

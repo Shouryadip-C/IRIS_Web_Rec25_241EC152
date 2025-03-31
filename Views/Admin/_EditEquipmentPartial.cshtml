@@ -1,0 +1,55 @@
+﻿@{
+    Layout = null;
+}
+@model Equipment
+
+<form id="editForm" asp-action="EditEquipment" method="post">
+    <div class="modal-body py-1">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <!-- Read-only fields -->
+        <div class="form-floating mb-3">
+            <input asp-for="Name" class="form-control" readonly />
+            <label asp-for="Name" class="form-label"></label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input asp-for="Type" class="form-control" readonly />
+            <label asp-for="Type" class="form-label"></label>
+        </div>
+
+        <!-- Total Quantity Input -->
+        <div class="form-floating mb-3">
+            <input asp-for="Quantity" class="form-control"
+                   min="0" />
+            <label asp-for="Quantity" class="form-label"></label>
+            <span asp-validation-for="Quantity" class="text-danger small"></span>
+        </div>
+
+
+        <!-- Status Dropdown -->
+        <div class="form-floating mb-3">
+            <select asp-for="Status" class="form-select"
+                    asp-items="Html.GetEnumSelectList<Status>()">
+            </select>
+            <label asp-for="Status" class="form-label"></label>
+            <span asp-validation-for="Status" class="text-danger small"></span>
+        </div>
+
+        <!-- Condition Dropdown -->
+        <div class="form-floating mb-3">
+            <select asp-for="Condition" class="form-select"
+                    asp-items="new SelectList(Equipment.Conditions)">
+            </select>
+            <label asp-for="Condition" class="form-label"></label>
+            <span asp-validation-for="Condition" class="text-danger small"></span>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>

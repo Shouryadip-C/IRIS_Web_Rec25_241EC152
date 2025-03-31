@@ -17,10 +17,12 @@ namespace IRIS_Web_Rec25_241EC152.Models
         [DataType(DataType.Date)]
         public DateTime BookingDate { get; set; }
 
-        [Range(9, 21)] // 9 AM to 9 PM slots
-        public int HourSlot { get; set; } // 9 = 9-10 AM, 15 = 3-4 PM
+        [Range(6, 21)]
+        public int HourSlot { get; set; } 
 
-        public string Status { get; set; } = "Pending"; // Approved/Rejected/Cancelled
+        public BookingStatus Status { get; set; } = BookingStatus.Pending;
+
+        public string? RejectionReason { get; set; } = null;
         public bool ReminderSent { get; set; }
 
         // Computed properties

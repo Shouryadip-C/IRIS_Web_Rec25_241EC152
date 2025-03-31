@@ -3,6 +3,7 @@ using System;
 using IRIS_Web_Rec25_241EC152.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IRIS_Web_Rec25_241EC152.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250328094823_UpdateModelsAndData")]
+    partial class UpdateModelsAndData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.14");
@@ -234,14 +237,12 @@ namespace IRIS_Web_Rec25_241EC152.Migrations
                     b.Property<int>("HourSlot")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("RejectionReason")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("ReminderSent")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -262,6 +263,9 @@ namespace IRIS_Web_Rec25_241EC152.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("AvailableQuantity")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Condition")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -271,10 +275,10 @@ namespace IRIS_Web_Rec25_241EC152.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Status")
+                    b.Property<int>("TotalQuantity")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Type")
@@ -283,88 +287,97 @@ namespace IRIS_Web_Rec25_241EC152.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Equipments");
+                    b.ToTable("Equipment");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
+                            AvailableQuantity = 14,
                             Condition = "Good",
                             Name = "Cricket Bat",
-                            Quantity = 14,
                             Status = 1,
+                            TotalQuantity = 14,
                             Type = "Cricket"
                         },
                         new
                         {
                             Id = 2,
+                            AvailableQuantity = 10,
                             Condition = "Good",
                             Name = "Football",
-                            Quantity = 10,
                             Status = 1,
+                            TotalQuantity = 10,
                             Type = "Football"
                         },
                         new
                         {
                             Id = 3,
+                            AvailableQuantity = 8,
                             Condition = "Good",
                             Name = "Badminton Racket",
-                            Quantity = 8,
                             Status = 1,
+                            TotalQuantity = 8,
                             Type = "Badminton"
                         },
                         new
                         {
                             Id = 4,
+                            AvailableQuantity = 4,
                             Condition = "Slightly Used",
                             Name = "Tennis Racket",
-                            Quantity = 4,
                             Status = 1,
+                            TotalQuantity = 4,
                             Type = "Tennis"
                         },
                         new
                         {
                             Id = 5,
+                            AvailableQuantity = 6,
                             Condition = "New",
                             Name = "Basketball",
-                            Quantity = 6,
                             Status = 1,
+                            TotalQuantity = 6,
                             Type = "Basketball"
                         },
                         new
                         {
                             Id = 6,
+                            AvailableQuantity = 12,
                             Condition = "Good",
                             Name = "Table Tennis Paddle",
-                            Quantity = 12,
                             Status = 1,
+                            TotalQuantity = 12,
                             Type = "Table Tennis"
                         },
                         new
                         {
                             Id = 8,
+                            AvailableQuantity = 4,
                             Condition = "New",
                             Name = "Volleyball",
-                            Quantity = 4,
                             Status = 1,
+                            TotalQuantity = 4,
                             Type = "Volleyball"
                         },
                         new
                         {
                             Id = 9,
+                            AvailableQuantity = 10,
                             Condition = "Good",
                             Name = "Skipping Rope",
-                            Quantity = 10,
                             Status = 1,
+                            TotalQuantity = 10,
                             Type = "Fitness"
                         },
                         new
                         {
                             Id = 10,
+                            AvailableQuantity = 5,
                             Condition = "New",
                             Name = "Dumbbells (5kg)",
-                            Quantity = 5,
                             Status = 1,
+                            TotalQuantity = 5,
                             Type = "Fitness"
                         });
                 });
@@ -378,23 +391,18 @@ namespace IRIS_Web_Rec25_241EC152.Migrations
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("EquipmentId")
+                    b.Property<int>("DurationHours")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("HourSlot")
+                    b.Property<int>("EquipmentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("RejectionReason")
+                    b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("ReminderSent")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -580,7 +588,7 @@ namespace IRIS_Web_Rec25_241EC152.Migrations
             modelBuilder.Entity("IRIS_Web_Rec25_241EC152.Models.CourtBooking", b =>
                 {
                     b.HasOne("IRIS_Web_Rec25_241EC152.Models.Court", "Court")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("CourtId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -696,6 +704,11 @@ namespace IRIS_Web_Rec25_241EC152.Migrations
                     b.Navigation("EquipmentBookings");
 
                     b.Navigation("Notifications");
+                });
+
+            modelBuilder.Entity("IRIS_Web_Rec25_241EC152.Models.Court", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 #pragma warning restore 612, 618
         }
