@@ -69,7 +69,7 @@
                                                 break;
                                             case BookingStatus.Rejected:
                                                 <span class="badge bg-danger">Rejected</span>;
-                                                <i class="fa-solid fa-circle-exclamation rejectreason" data-bs-toggle="tooltip" title=@booking.RejectionReason></i>
+                                                <i class="fa-solid fa-info-circle" style="width:100px; color:blue" data-bs-toggle="tooltip" title="@booking.RejectionReason"></i>
                                                 break;
                                             case BookingStatus.CancellationRequested:
                                                 <span class="badge bg-warning">Requested Canellation</span>
@@ -90,14 +90,14 @@
                                         {
                                             case BookingStatus.CancellationRequested:
                                                 <button class="btn btn-sm btn-outline-danger delete-court-btn disabled"
-                                                        data-id="@booking.Id">
+                                                data-id="@booking.Id">
                                                     <i class="fas fa-trash"></i>
                                                 </button>
                                                 ;
                                                 break;
                                             default:
                                                 <button class="btn btn-sm btn-outline-danger delete-court-btn"
-                                                        data-id="@booking.Id">
+                                                data-id="@booking.Id">
                                                     <i class="fas fa-trash"></i>
                                                 </button>;
                                                 break;
@@ -151,11 +151,12 @@
                                                 <span class="badge bg-warning text-dark">Pending</span>;
                                                 break;
                                             case BookingStatus.Approved:
-                                                <span class="badge bg-success">Approved</span>;
+                                                <span class="badge bg-success">Approved</span>
+                                                ;
                                                 break;
                                             case BookingStatus.Rejected:
-                                                <span class="badge bg-danger">Rejected</span>;
-                                                @* <i class="fa-solid fa-circle-exclamation" data-bs-toggle="tooltip" title=@booking.RejectionReason></i> *@
+                                                <span class="badge bg-danger">Rejected</span>         
+                                                <i class="fa-solid fa-info-circle" style="width:100px; color:blue" data-bs-toggle="tooltip" title="@booking.RejectionReason"></i>
                                                 break;
                                             case BookingStatus.CancellationRequested:
                                                 <span class="badge bg-warning">Requested Canellation</span>
